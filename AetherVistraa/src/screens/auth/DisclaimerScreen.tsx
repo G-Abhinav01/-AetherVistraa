@@ -1,19 +1,72 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Button, Checkbox, Portal, Dialog } from 'react-native-paper';
+import { Text, Button, Checkbox, Portal, Dialog, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation';
-import { darkTheme } from '../../constants/theme';
 import { useAppSettings } from '../../hooks/useAppSettings';
 
 type DisclaimerScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Disclaimer'>;
+
+// Define static styles outside the component
+const makeStyles = (theme) => StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dialog: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: 12,
+    padding: 8,
+  },
+  title: {
+    color: theme.colors.text,
+    fontSize: 22,
+    textAlign: 'center',
+  },
+  scrollArea: {
+    maxHeight: 400,
+  },
+  disclaimerText: {
+    color: theme.colors.text,
+    fontSize: 16,
+    marginBottom: 16,
+    lineHeight: 24,
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  actionsContainer: {
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    alignSelf: 'flex-start',
+  },
+  checkboxLabel: {
+    color: theme.colors.text,
+    marginLeft: 8,
+  },
+  continueButton: {
+    width: '100%',
+    borderRadius: 8,
+  },
+});
 
 const DisclaimerScreen = () => {
   const navigation = useNavigation<DisclaimerScreenNavigationProp>();
   const { settings, setShowDisclaimer } = useAppSettings();
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(true);
+  const theme = useTheme();
+  const styles = makeStyles(theme);
 
   const handleContinue = () => {
     // Save the user's preference for showing the disclaimer
@@ -76,7 +129,7 @@ const DisclaimerScreen = () => {
                 <Checkbox
                   status={dontShowAgain ? 'checked' : 'unchecked'}
                   onPress={() => setDontShowAgain(!dontShowAgain)}
-                  color={darkTheme.colors.primary}
+                  color={theme.colors.primary}
                 />
                 <Text style={styles.checkboxLabel}>Don't show this again</Text>
               </View>
@@ -94,57 +147,5 @@ const DisclaimerScreen = () => {
       </Portal>
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: darkTheme.colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dialog: {
-    backgroundColor: darkTheme.colors.surface,
-    borderRadius: 12,
-    padding: 8,
-  },
-  title: {
-    color: darkTheme.colors.text,
-    fontSize: 22,
-    textAlign: 'center',
-  },
-  scrollArea: {
-    maxHeight: 400,
-  },
-  disclaimerText: {
-    color: darkTheme.colors.text,
-    fontSize: 16,
-    marginBottom: 16,
-    lineHeight: 24,
-  },
-  bold: {
-    fontWeight: 'bold',
-  },
-  actionsContainer: {
-    width: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    alignSelf: 'flex-start',
-  },
-  checkboxLabel: {
-    color: darkTheme.colors.text,
-    marginLeft: 8,
-  },
-  continueButton: {
-    width: '100%',
-    borderRadius: 8,
-  },
-});
 
 export default DisclaimerScreen;

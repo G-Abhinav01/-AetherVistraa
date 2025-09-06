@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Button, RadioButton, Divider } from 'react-native-paper';
+import { Text, Button, RadioButton, Divider, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation';
-import { darkTheme } from '../../constants/theme';
 import { Language } from '../../types';
 import { useAppSettings } from '../../hooks/useAppSettings';
 
@@ -32,6 +31,8 @@ const LanguageSelectionScreen = () => {
   const navigation = useNavigation<LanguageSelectionScreenNavigationProp>();
   const { settings, setLanguage } = useAppSettings();
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(settings.language);
+  const theme = useTheme();
+  const styles = makeStyles(theme);
 
   const handleContinue = () => {
     // Save the selected language
@@ -60,7 +61,7 @@ const LanguageSelectionScreen = () => {
                 </View>
                 <RadioButton 
                   value={lang.value} 
-                  color={darkTheme.colors.primary}
+                  color={theme.colors.primary}
                 />
               </View>
               {index < languages.length - 1 && <Divider style={styles.divider} />}
@@ -81,21 +82,22 @@ const LanguageSelectionScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+// Define static styles outside the component
+const makeStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: darkTheme.colors.background,
+    backgroundColor: theme.colors.background,
     padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
     marginBottom: 24,
     opacity: 0.8,
   },
@@ -114,16 +116,16 @@ const styles = StyleSheet.create({
   },
   languageLabel: {
     fontSize: 18,
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
   },
   regionLabel: {
     fontSize: 14,
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
     opacity: 0.6,
     marginTop: 4,
   },
   divider: {
-    backgroundColor: darkTheme.colors.text,
+    backgroundColor: theme.colors.text,
     opacity: 0.1,
   },
   continueButton: {

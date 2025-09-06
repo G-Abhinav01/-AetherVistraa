@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import { Text, Button, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation';
 import { signIn } from '../../utils/auth';
-import { darkTheme } from '../../constants/theme';
 import { AuthProvider } from '../../types';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
@@ -14,6 +13,8 @@ const LoginScreen = () => {
   const navigation = useNavigation<LoginScreenNavigationProp>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const theme = useTheme();
+  const styles = makeStyles(theme);
 
   const handleLogin = async (provider: AuthProvider) => {
     try {
@@ -69,7 +70,7 @@ const LoginScreen = () => {
         {isLoading && (
           <ActivityIndicator 
             size="large" 
-            color={darkTheme.colors.primary} 
+            color={theme.colors.primary} 
             style={styles.loader} 
           />
         )}
@@ -88,10 +89,11 @@ const LoginScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+// Define static styles outside the component
+const makeStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: darkTheme.colors.background,
+    backgroundColor: theme.colors.background,
     padding: 20,
     justifyContent: 'space-between',
   },
@@ -102,12 +104,12 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: darkTheme.colors.primary,
+    color: theme.colors.primary,
     marginBottom: 10,
   },
   tagline: {
     fontSize: 16,
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
     textAlign: 'center',
   },
   buttonContainer: {
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   errorText: {
-    color: darkTheme.colors.error,
+    color: theme.colors.error,
     marginTop: 20,
     textAlign: 'center',
   },
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerText: {
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
     fontSize: 14,
     textAlign: 'center',
   },

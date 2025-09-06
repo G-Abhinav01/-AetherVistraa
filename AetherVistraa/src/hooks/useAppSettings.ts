@@ -15,21 +15,24 @@ export const useAppSettings = () => {
   const [settings, setSettings] = useState<AppSettings>(defaultSettings);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Load settings from storage
+  const loadSettings = async () => {
+    try {
+      const storedSettings = await AsyncStorage.getItem(SETTINGS_STORAGE_KEY);
+      if (storedSettings) {
+        setSettings(JSON.parse(storedSettings));
+      }
+      setIsLoading(false);
+      return true;
+    } catch (error) {
+      console.error('Error loading settings:', error);
+      setIsLoading(false);
+      return false;
+    }
+  };
+
   // Load settings from storage on component mount
   useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const storedSettings = await AsyncStorage.getItem(SETTINGS_STORAGE_KEY);
-        if (storedSettings) {
-          setSettings(JSON.parse(storedSettings));
-        }
-      } catch (error) {
-        console.error('Error loading settings:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     loadSettings();
   }, []);
 
@@ -61,6 +64,7 @@ export const useAppSettings = () => {
   return {
     settings,
     isLoading,
+    loadSettings,
     setLanguage,
     toggleDarkMode,
     setShowDisclaimer,

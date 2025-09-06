@@ -1,7 +1,6 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { darkTheme } from '../constants/theme';
+import { useTheme } from 'react-native-paper';
 
 // Import screens (to be created)
 import LoginScreen from '../screens/auth/LoginScreen';
@@ -23,20 +22,20 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-export const Navigation = () => {
+const AppNavigator = () => {
+  const theme = useTheme();
   return (
-    <NavigationContainer theme={darkTheme as any}>
       <Stack.Navigator
         initialRouteName="Login"
         screenOptions={{
-          headerStyle: {
-            backgroundColor: darkTheme.colors.surface,
-          },
-          headerTintColor: darkTheme.colors.text,
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}
+        headerStyle: {
+          backgroundColor: theme.colors.surface,
+        },
+        headerTintColor: theme.colors.text,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
       >
         <Stack.Screen 
           name="Login" 
@@ -69,6 +68,7 @@ export const Navigation = () => {
           options={{ title: 'Settings' }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
   );
 };
+
+export default AppNavigator;

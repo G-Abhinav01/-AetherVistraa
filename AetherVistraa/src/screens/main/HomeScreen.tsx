@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
-import { Text, IconButton, Card, BottomNavigation } from 'react-native-paper';
+import { Text, IconButton, Card, BottomNavigation, useTheme } from 'react-native-paper';
 import { Camera } from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation';
-import { darkTheme } from '../../constants/theme';
 import { useFaceDetection } from '../../hooks/useFaceDetection';
 import { usePhrases } from '../../hooks/usePhrases';
 import { useAppSettings } from '../../hooks/useAppSettings';
@@ -14,19 +13,7 @@ import { speakPhrase } from '../../utils/speech';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
-const HomeScreen = () => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
-  const { settings } = useAppSettings();
-  const { 
-    phrases, 
-    selectedPhraseIndex, 
-    selectNextPhrase, 
-    getSelectedPhrase 
-  } = usePhrases(settings.language);
-  
-  const [isCycling, setIsCycling] = useState(false);
-  const [cycleInterval, setCycleInterval] = useState<NodeJS.Timeout | null>(null);
-  const [activeTab, setActiveTab] = useState('home');
+// HomeScreen component definition moved to the bottom of the file
 
   // Handle mouth open event - start cycling through phrases
   const handleMouthOpen = () => {
@@ -179,10 +166,11 @@ const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+// Define static styles outside the component
+const makeStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: darkTheme.colors.background,
+    backgroundColor: theme.colors.background,
   },
   cameraContainer: {
     height: '30%',
@@ -218,7 +206,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   instructionText: {
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
     fontSize: 18,
     marginBottom: 20,
     textAlign: 'center',
@@ -226,32 +214,49 @@ const styles = StyleSheet.create({
   phraseCard: {
     width: '100%',
     padding: 10,
-    backgroundColor: darkTheme.colors.surface,
+    backgroundColor: theme.colors.surface,
     elevation: 4,
     borderRadius: 12,
   },
   phraseText: {
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
     padding: 20,
   },
   blinkInstruction: {
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
     fontSize: 16,
     marginTop: 20,
     opacity: 0.8,
   },
   bottomNav: {
-    backgroundColor: darkTheme.colors.surface,
+    backgroundColor: theme.colors.surface,
   },
   permissionText: {
-    color: darkTheme.colors.text,
+    color: theme.colors.text,
     fontSize: 18,
     textAlign: 'center',
     padding: 20,
   },
 });
+
+// Initialize styles with theme in the component
+const HomeScreen = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const { settings } = useAppSettings();
+  const { 
+    phrases, 
+    selectedPhraseIndex, 
+    selectNextPhrase, 
+    getSelectedPhrase 
+  } = usePhrases(settings.language);
+  const theme = useTheme();
+  const styles = makeStyles(theme);
+  
+  const [isCycling, setIsCycling] = useState(false);
+  const [cycleInterval, setCycleInterval] = useState<NodeJS.Timeout | null>(null);
+  const [activeTab, setActiveTab] = useState('home');
 
 export default HomeScreen;
